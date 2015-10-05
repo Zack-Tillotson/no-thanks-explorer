@@ -1,2 +1,2 @@
-import Control from './control';
-export default Engine;
+import LearningControl from './control';
+LearningControl();

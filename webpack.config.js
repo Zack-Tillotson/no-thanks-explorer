@@ -5,7 +5,7 @@ var buildEnv = process.env.BUILD || 'dev';
 
 module.exports = {
   entry: {
-    lib: './src/index.js'
+    run: './src/index.js'
   },
   output: {
     filename: '[name].js',
@@ -20,10 +20,10 @@ module.exports = {
   node: {
     fs: "empty"
   },
+  displayErrorDetails: true,
   module: {
     loaders: [
       { test: /\.js$/, loader: 'babel?stage=2', exclude: /node_modules/ },
     ]
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
+  }
 };
