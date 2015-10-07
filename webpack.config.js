@@ -5,20 +5,19 @@ var buildEnv = process.env.BUILD || 'dev';
 
 module.exports = {
   entry: {
-    run: './src/index.js'
+    lib: './src/index.js'
   },
   output: {
     filename: '[name].js',
-    path: path.join(__dirname, 'dist')
+    path: path.join(__dirname, 'dist'),
+    libraryTarget: 'umd',
+    library: 'NoThanksLearner'
   },
   resolve: {
     root: [
       __dirname
     ],
     extensions: ['', '.js']
-  },
-  node: {
-    fs: "empty"
   },
   displayErrorDetails: true,
   module: {

@@ -1,2 +1,2 @@
 import LearningControl from './control';
-LearningControl();
+export default LearningControl;
