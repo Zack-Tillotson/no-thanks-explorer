@@ -1,6 +1,6 @@
 {
   "name": "no-thanks-learner",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Learning Control for No Thanks! the tabletop game.",
   "main": "src/index.js",
   "scripts": {
