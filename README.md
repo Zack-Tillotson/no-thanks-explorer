@@ -1,7 +1,12 @@
-No Thanks Engine
+No Thanks Explorer
 =========
 
 Zack Tillotson
 
-The basics of a engine for running a No Thanks! Game. Intended to be used in conjuction with
-a action result prediction engine to train a No Thanks! bot.
+The basics of a controller for teaching a No Thanks! game bot. Intended to automate
+running the games so the bot code can focus on the task of learning.
+
+```
+npm install
+npm test
+```
