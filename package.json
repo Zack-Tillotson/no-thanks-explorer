@@ -1,14 +1,14 @@
 {
-  "name": "no-thanks-learner",
+  "name": "no-thanks-explorer",
   "version": "1.0.0",
-  "description": "Learning Control for No Thanks! the tabletop game.",
-  "main": "src/index.js",
+  "description": "Learning Control for No Thanks! the tabletop game bots.",
+  "main": "index.js",
   "scripts": {
     "test": "node test/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "'"
+    "url": "https://github.com/Zack-Tillotson/no-thanks-explorer.git"
   },
   "author": "Zack Tillotson",
   "license": "ISC",
