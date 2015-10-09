@@ -1,2 +1,2 @@
-import LearningControl from './control';
-export default LearningControl;
+import Runner from './runner';
+export default Runner;
