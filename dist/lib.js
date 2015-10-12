@@ -99,26 +99,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    while (gameState.game.ongoing) {
 
 	      var currentPlayer = gameState.players.list[gameState.players.currentPlayer];
-	      var _legalActions = _noThanksEngine2['default'].getLegalActions(gameState);
-	      var predictions = currentPlayer.predict(gameState, _legalActions);
-	      var _action = predictions.sort(function (a, b) {
+	      var legalActions = _noThanksEngine2['default'].getLegalActions(gameState);
+	      var predictions = currentPlayer.predict(gameState, legalActions);
+	      var action = predictions.sort(function (a, b) {
 	        return a.value - b.value;
 	      })[0].action;
-	      var _newGameState = _noThanksEngine2['default'].resolveAction(gameState, _action);
+	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
 
 	      if (currentPlayer.update) {
-	        currentPlayer.update(predictions, gameState, _newGameState);
+	        currentPlayer.update(predictions, gameState, newGameState);
 	      }
 
 	      if (config.reportEveryTurn) {
-	        (0, _reporter.report)('turn', gameState, _newGameState, _legalActions, _action);
+	        (0, _reporter.report)('turn', gameState, newGameState, legalActions, action);
 	      }
 
-	      gameState = _newGameState;
+	      gameState = newGameState;
 	    }
 
 	    if (config.reportAfter) {
-	      (0, _reporter.report)('game', gameState, newGameState, currentPlayerId, legalActions, action);
+	      (0, _reporter.report)('game', gameState);
 	    }
 
 	    return gameState;
@@ -138,7 +138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports["default"] = {
 	  report: function report(when, gameState, newGameState, legalActions, action) {
-	    console.log(legalActions.toString() + " => " + action + "\n" + JSON.stringify(newGameState) + "\n\n");
+	    console.log(JSON.stringify(gameState) + '\n\t' + legalActions.toString() + " => " + action + "\n" + JSON.stringify(newGameState) + "\n\n");
 	  }
 	};
 	module.exports = exports["default"];
