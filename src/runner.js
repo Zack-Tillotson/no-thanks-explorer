@@ -18,7 +18,7 @@ export default {
       const newGameState = Engine.resolveAction(gameState, action);
 
       if(currentPlayer.update) {
-        currentPlayer.update(predictions, gameState, newGameState);
+        currentPlayer.update(predictions, action, newGameState);
       }
 
       if(config.reportEveryTurn) {

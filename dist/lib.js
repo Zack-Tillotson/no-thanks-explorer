@@ -106,8 +106,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      })[0].action;
 	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
 
+	      console.log('action?', action);
 	      if (currentPlayer.update) {
-	        currentPlayer.update(predictions, gameState, newGameState);
+	        currentPlayer.update(predictions, action, newGameState);
 	      }
 
 	      if (config.reportEveryTurn) {
@@ -138,6 +139,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports["default"] = {
 	  report: function report(when, gameState, newGameState, legalActions, action) {
+	    if (legalActions === undefined) legalActions = [];
+
 	    console.log(JSON.stringify(gameState) + '\n\t' + legalActions.toString() + " => " + action + "\n" + JSON.stringify(newGameState) + "\n\n");
 	  }
 	};
