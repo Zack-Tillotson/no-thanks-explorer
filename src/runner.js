@@ -14,7 +14,7 @@ export default {
       const currentPlayer = gameState.players.list[gameState.players.currentPlayer];
       const legalActions = Engine.getLegalActions(gameState);
       const predictions = currentPlayer.predict(gameState, legalActions);
-      const action = predictions.sort((a,b) => b.value - a.value)[0].action;
+      const action = predictions.sort((a,b) => a.value - b.value)[0].action;
       const newGameState = Engine.resolveAction(gameState, action);
 
       if(currentPlayer.update) {

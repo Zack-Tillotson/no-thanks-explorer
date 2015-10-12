@@ -102,7 +102,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _legalActions = _noThanksEngine2['default'].getLegalActions(gameState);
 	      var predictions = currentPlayer.predict(gameState, _legalActions);
 	      var _action = predictions.sort(function (a, b) {
-	        return b.value - a.value;
+	        return a.value - b.value;
 	      })[0].action;
 	      var _newGameState = _noThanksEngine2['default'].resolveAction(gameState, _action);
 
