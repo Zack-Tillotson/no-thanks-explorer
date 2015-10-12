@@ -106,7 +106,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      })[0].action;
 	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
 
-	      console.log('action?', action);
 	      if (currentPlayer.update) {
 	        currentPlayer.update(predictions, action, newGameState);
 	      }
