@@ -95,6 +95,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    players = (0, _verify.verifyPlayers)(players);
 	    config = (0, _verify.verifyConfig)(config);
 
+	    players.forEach(function (player, index) {
+	      return player.id = player.id || 'Player ' + (index + 1);
+	    });
+
 	    var gameState = _noThanksEngine2['default'].getInitialState(players);
 	    while (gameState.game.ongoing) {
 
@@ -111,14 +115,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      if (config.reportEveryTurn) {
-	        (0, _reporter.report)('turn', gameState, newGameState, legalActions, action);
+	        (0, _reporter.turnReport)(gameState, newGameState, legalActions, action);
 	      }
 
 	      gameState = newGameState;
 	    }
 
 	    if (config.reportAfter) {
-	      (0, _reporter.report)('game', gameState);
+	      (0, _reporter.gameReport)(gameState);
 	    }
 
 	    return gameState;
@@ -137,10 +141,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	exports["default"] = {
-	  report: function report(when, gameState, newGameState, legalActions, action) {
+	  turnReport: function turnReport(gameState, newGameState, legalActions, action) {
 	    if (legalActions === undefined) legalActions = [];
 
 	    console.log(JSON.stringify(gameState) + '\n\t' + legalActions.toString() + " => " + action + "\n" + JSON.stringify(newGameState) + "\n\n");
+	  },
+	  gameReport: function gameReport(gameState, newGameState, legalActions, action) {
+	    if (legalActions === undefined) legalActions = [];
+
+	    console.log(JSON.stringify(gameState.players.list));
+	    console.log('Winner: ', gameState.players.list.reduce(function (best, player) {
+	      return best.score > player.score ? player : best;
+	    }));
 	  }
 	};
 	module.exports = exports["default"];

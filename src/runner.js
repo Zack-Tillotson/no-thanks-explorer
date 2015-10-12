@@ -1,4 +1,4 @@
-import {report} from './reporter';
+import {turnReport, gameReport} from './reporter';
 import {verifyPlayers, verifyConfig} from './verify';
 import Engine from 'no-thanks-engine';
 
@@ -7,6 +7,8 @@ export default {
 
     players = verifyPlayers(players);
     config = verifyConfig(config);
+
+    players.forEach((player, index) => player.id = player.id || 'Player ' + (index + 1));
 
     let gameState = Engine.getInitialState(players);
     while(gameState.game.ongoing) {
@@ -22,7 +24,7 @@ export default {
       }
 
       if(config.reportEveryTurn) {
-        report('turn', gameState, newGameState, legalActions, action);
+        turnReport(gameState, newGameState, legalActions, action);
       }
 
       gameState = newGameState;
@@ -30,7 +32,7 @@ export default {
     }
 
     if(config.reportAfter) {
-      report('game', gameState);
+      gameReport(gameState);
     }
 
 
