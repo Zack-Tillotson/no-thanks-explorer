@@ -30,7 +30,7 @@ export default {
     }
 
     if(config.reportAfter) {
-      report('game', gameState, newGameState, currentPlayerId, legalActions, action);
+      report('game', gameState);
     }
 
 
