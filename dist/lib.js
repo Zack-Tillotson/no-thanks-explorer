@@ -100,8 +100,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var currentPlayer = gameState.players.list[gameState.players.currentPlayer];
 	      var _legalActions = _noThanksEngine2['default'].getLegalActions(gameState);
-	      var _action = currentPlayer.predict(gameState, _legalActions);
+	      var predictions = currentPlayer.predict(gameState, _legalActions);
+	      var _action = predictions.sort(function (a, b) {
+	        return b.value - a.value;
+	      })[0].action;
 	      var _newGameState = _noThanksEngine2['default'].resolveAction(gameState, _action);
+
+	      if (currentPlayer.update) {
+	        currentPlayer.update(predictions, gameState, _newGameState);
+	      }
 
 	      if (config.reportEveryTurn) {
 	        (0, _reporter.report)('turn', gameState, _newGameState, _legalActions, _action);

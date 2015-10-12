@@ -1,11 +1,12 @@
 module.exports = function() {
   return {
     predict: function(gameState, legalActions) {
-      if(legalActions.length === 1 || Math.random() > .5) {
-        return 'take';
-      } else {
-        return 'noThanks';
-      }
+      const willTake = legalActions.length === 1 || Math.random() > .5;
+      const ret = [
+        {action: 'take', value: willTake ? 1 : 0},
+        {action: 'noThanks', value: willTake ? 0 : 1}
+      ];
+      return ret;
     }
   }
 }

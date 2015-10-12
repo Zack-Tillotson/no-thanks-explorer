@@ -13,8 +13,13 @@ export default {
       
       const currentPlayer = gameState.players.list[gameState.players.currentPlayer];
       const legalActions = Engine.getLegalActions(gameState);
-      const action = currentPlayer.predict(gameState, legalActions);
+      const predictions = currentPlayer.predict(gameState, legalActions);
+      const action = predictions.sort((a,b) => b.value - a.value)[0].action;
       const newGameState = Engine.resolveAction(gameState, action);
+
+      if(currentPlayer.update) {
+        currentPlayer.update(predictions, gameState, newGameState);
+      }
 
       if(config.reportEveryTurn) {
         report('turn', gameState, newGameState, legalActions, action);

@@ -1,6 +1,6 @@
 {
-  "name": "no-thanks-explorer",
-  "version": "1.0.1",
+  "name": "no-thanks-runner",
+  "version": "0.0.1",
   "description": "Learning Control for No Thanks! the tabletop game bots.",
   "main": "index.js",
   "scripts": {
