@@ -8,7 +8,7 @@ webpack(config).run(function(err, stats) {
   var players = [player(), player(), player()];
   
   Simulator.play(players, {
-    reportEveryTurn: false,
+    reportEveryTurn: true,
     reportAfter: true
   });
 

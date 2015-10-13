@@ -111,7 +111,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
 
 	      if (currentPlayer.update) {
-	        currentPlayer.update(predictions, action, newGameState);
+	        currentPlayer.update(predictions, action, gameState, newGameState);
 	      }
 
 	      if (config.reportEveryTurn) {
@@ -135,27 +135,50 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	  value: true
 	});
-	exports["default"] = {
+	function printGameState(gameState) {
+	  var showWinner = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+
+	  console.log(gameState.game.ongoing ? '' : 'Game Over');
+	  console.log('$' + gameState.table.pot + ' ' + JSON.stringify(gameState.deck));
+
+	  var highscore = gameState.players.list.reduce(function (best, player) {
+	    return player.score < best ? player.score : best;
+	  }, 9999);
+	  gameState.players.list.forEach(function (player, index) {
+
+	    var winnerMarker = '   ';
+	    if (showWinner && player.score == highscore) {
+	      winnerMarker = 'won';
+	    }
+
+	    var currentPlayerMarker = gameState.players.currentPlayer === index ? '*' : ' ';
+	    console.log(winnerMarker + ' ' + currentPlayerMarker + ' ' + JSON.stringify(player));
+	  });
+	}
+
+	exports['default'] = {
+
 	  turnReport: function turnReport(gameState, newGameState, legalActions, action) {
 	    if (legalActions === undefined) legalActions = [];
 
-	    console.log(JSON.stringify(gameState) + '\n\t' + legalActions.toString() + " => " + action + "\n" + JSON.stringify(newGameState) + "\n\n");
+	    console.log("Turn ===============");
+	    printGameState(gameState);
+	    console.log('\n\tActions: ' + legalActions.toString() + " => " + action);
+	    printGameState(newGameState);
+	    console.log('\n\n');
 	  },
-	  gameReport: function gameReport(gameState, newGameState, legalActions, action) {
-	    if (legalActions === undefined) legalActions = [];
 
-	    console.log(JSON.stringify(gameState.players.list));
-	    console.log('Winner: ', gameState.players.list.reduce(function (best, player) {
-	      return best.score > player.score ? player : best;
-	    }));
+	  gameReport: function gameReport(gameState) {
+	    console.log("============== Summary ===============");
+	    printGameState(gameState, true);
 	  }
 	};
-	module.exports = exports["default"];
+	module.exports = exports['default'];
 
 /***/ },
 /* 3 */
