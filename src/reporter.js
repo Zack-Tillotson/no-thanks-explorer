@@ -1,6 +1,9 @@
 function printGameState(gameState, showWinner = false) {
   console.log(gameState.game.ongoing ? '' : 'Game Over');
-  console.log('$' + gameState.table.pot + ' ' + JSON.stringify(gameState.deck));
+
+  if(gameState.game.ongoing) {
+    console.log('$' + gameState.table.pot + ' ' + JSON.stringify(gameState.deck));
+  }
   
   const highscore = gameState.players.list.reduce((best, player) => 
         player.score < best ? player.score : best
@@ -20,12 +23,12 @@ function printGameState(gameState, showWinner = false) {
 
 export default {
 
-  turnReport(gameState, newGameState, legalActions = [], action) {
+  turnReport(gameState, newGameState, actionOptions = [], action) {
     console.log("Turn ===============");
     printGameState(gameState);
-    console.log('\n\tActions: ' + legalActions.toString() + " => " + action);
+    console.log('\n\tActions: ' + actionOptions.map((option) => option.action).toString() + " => " + action);
     printGameState(newGameState);
-    console.log('\n\n');
+    console.log('\n');
   },
 
   gameReport(gameState) {

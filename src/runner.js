@@ -14,17 +14,19 @@ export default {
     while(gameState.game.ongoing) {
       
       const currentPlayer = gameState.players.list[gameState.players.currentPlayer];
-      const legalActions = Engine.getLegalActions(gameState);
-      const predictions = currentPlayer.predict(gameState, legalActions);
-      const action = predictions.sort((a,b) => a.value - b.value)[0].action;
-      const newGameState = Engine.resolveAction(gameState, action);
+      const actionOptions = Engine.getActionOptions(gameState);
+      const predictions = currentPlayer.predict(gameState, actionOptions);
+
+      const choice = predictions.sort((a,b) => a.value - b.value)[0];
+      const action = choice.action;
+      const newGameState = choice.state;
 
       if(currentPlayer.update) {
         currentPlayer.update(predictions, action, gameState, newGameState);
       }
 
       if(config.reportEveryTurn) {
-        turnReport(gameState, newGameState, legalActions, action);
+        turnReport(gameState, newGameState, predictions, action);
       }
 
       gameState = newGameState;

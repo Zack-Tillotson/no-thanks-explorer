@@ -103,19 +103,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    while (gameState.game.ongoing) {
 
 	      var currentPlayer = gameState.players.list[gameState.players.currentPlayer];
-	      var legalActions = _noThanksEngine2['default'].getLegalActions(gameState);
-	      var predictions = currentPlayer.predict(gameState, legalActions);
-	      var action = predictions.sort(function (a, b) {
+	      var actionOptions = _noThanksEngine2['default'].getActionOptions(gameState);
+	      var predictions = currentPlayer.predict(gameState, actionOptions);
+
+	      var choice = predictions.sort(function (a, b) {
 	        return a.value - b.value;
-	      })[0].action;
-	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
+	      })[0];
+	      var action = choice.action;
+	      var newGameState = choice.state;
 
 	      if (currentPlayer.update) {
 	        currentPlayer.update(predictions, action, gameState, newGameState);
 	      }
 
 	      if (config.reportEveryTurn) {
-	        (0, _reporter.turnReport)(gameState, newGameState, legalActions, action);
+	        (0, _reporter.turnReport)(gameState, newGameState, predictions, action);
 	      }
 
 	      gameState = newGameState;
@@ -144,7 +146,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var showWinner = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 	  console.log(gameState.game.ongoing ? '' : 'Game Over');
-	  console.log('$' + gameState.table.pot + ' ' + JSON.stringify(gameState.deck));
+
+	  if (gameState.game.ongoing) {
+	    console.log('$' + gameState.table.pot + ' ' + JSON.stringify(gameState.deck));
+	  }
 
 	  var highscore = gameState.players.list.reduce(function (best, player) {
 	    return player.score < best ? player.score : best;
@@ -163,14 +168,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports['default'] = {
 
-	  turnReport: function turnReport(gameState, newGameState, legalActions, action) {
-	    if (legalActions === undefined) legalActions = [];
+	  turnReport: function turnReport(gameState, newGameState, actionOptions, action) {
+	    if (actionOptions === undefined) actionOptions = [];
 
 	    console.log("Turn ===============");
 	    printGameState(gameState);
-	    console.log('\n\tActions: ' + legalActions.toString() + " => " + action);
+	    console.log('\n\tActions: ' + actionOptions.map(function (option) {
+	      return option.action;
+	    }).toString() + " => " + action);
 	    printGameState(newGameState);
-	    console.log('\n\n');
+	    console.log('\n');
 	  },
 
 	  gameReport: function gameReport(gameState) {
@@ -314,7 +321,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/******/ 	
 	/******/ 	
 	/******/ 	var hotApplyOnUpdate = true;
-	/******/ 	var hotCurrentHash = "b4e4e56eea42591d4247"; // eslint-disable-line no-unused-vars
+	/******/ 	var hotCurrentHash = "02d1decef3e9f31c9ca2"; // eslint-disable-line no-unused-vars
 	/******/ 	var hotCurrentModuleData = {};
 	/******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 	/******/ 	
@@ -828,7 +835,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/***/ function(module, exports, __webpack_require__) {
 
 		// Engine
-		// Should implement pure functions: getInitialState, resolveAction
+		// Should implement pure functions: getInitialState, getActionOptions
 		'use strict';
 
 		Object.defineProperty(exports, '__esModule', {
@@ -854,6 +861,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		  Take: 'take'
 		};
 
+		function getInitialState(playerList) {
+
+		  var deck = _deck2['default'].resetDeck();
+		  var players = _players2['default'].resetPlayers(playerList);
+		  var table = _table2['default'].resetTable();
+		  var game = getGameState(deck);
+
+		  return { deck: deck, players: players, table: table, game: game };
+		}
+
 		function getGameState(deck) {
 		  return {
 		    ongoing: deck.length > 0
@@ -868,39 +885,38 @@ return /******/ (function(modules) { // webpackBootstrap
 		  return ret;
 		}
 
+		// Returns list of actions and game state that would result
+		function getActionOptions(state) {
+		  var actions = getLegalActions(state);
+		  return actions.map(function (action) {
+		    return {
+		      action: action, state: resolveAction(state, action)
+		    };
+		  });
+		}
+
+		function resolveAction(state, action) {
+
+		  var card = state.deck[0];
+		  var pot = state.table.pot;
+
+		  var players = action === Actions.NoThanks ? _players2['default'].noThanksCard(state.players) : _players2['default'].takeCard(state.players, card, pot);
+
+		  var deck = action === Actions.NoThanks ? state.deck : _deck2['default'].drawCard(state.deck);
+
+		  var table = action === Actions.NoThanks ? _table2['default'].bumpPot(state.table) : _table2['default'].takePot(state.table);
+
+		  var game = getGameState(deck);
+
+		  return { deck: deck, players: players, table: table, game: game };
+		}
+
+		var Engine = { getLegalActions: getLegalActions, resolveAction: resolveAction };
+
 		exports['default'] = {
-		  getInitialState: function getInitialState(playerList) {
-
-		    var deck = _deck2['default'].resetDeck();
-		    var players = _players2['default'].resetPlayers(playerList);
-		    var table = _table2['default'].resetTable();
-		    var game = getGameState(deck);
-
-		    return { deck: deck, players: players, table: table, game: game };
-		  },
-
-		  getLegalActions: getLegalActions,
-
-		  resolveAction: function resolveAction(state, action) {
-
-		    if (getLegalActions(state).indexOf(action) === -1) {
-		      throw "Attempted to take illegal action '" + action + "', legal actions are " + getLegalActions(state).toString();
-		    }
-
-		    var card = state.deck[0];
-		    var pot = state.table.pot;
-
-		    var players = action === Actions.NoThanks ? _players2['default'].noThanksCard(state.players) : _players2['default'].takeCard(state.players, card, pot);
-
-		    var deck = action === Actions.NoThanks ? state.deck : _deck2['default'].drawCard(state.deck);
-
-		    var table = action === Actions.NoThanks ? _table2['default'].bumpPot(state.table) : _table2['default'].takePot(state.table);
-
-		    var game = getGameState(deck);
-
-		    return { deck: deck, players: players, table: table, game: game };
-		  },
-		  __debug__: { Deck: _deck2['default'], Players: _players2['default'], Table: _table2['default'] }
+		  getInitialState: getInitialState,
+		  getActionOptions: getActionOptions,
+		  __debug__: { Engine: Engine, Deck: _deck2['default'], Players: _players2['default'], Table: _table2['default'] }
 		};
 		module.exports = exports['default'];
 
@@ -933,6 +949,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return deck;
 		  },
 		  drawCard: function drawCard(deck) {
+		    deck = deck.slice(0);
 		    if (deck.length > 0) {
 		      deck.shift();
 		    }
@@ -1008,6 +1025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		      list: list
 		    };
 		  },
+
 		  takeCard: function takeCard(players, card, pot) {
 		    var list = players.list.slice(0);
 		    var currentPlayer = list[players.currentPlayer];
