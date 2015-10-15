@@ -103,14 +103,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    while (gameState.game.ongoing) {
 
 	      var currentPlayer = gameState.players.list[gameState.players.currentPlayer];
-	      var actionOptions = _noThanksEngine2['default'].getActionOptions(gameState);
-	      var predictions = currentPlayer.predict(gameState, actionOptions);
+	      var actions = _noThanksEngine2['default'].getLegalActions(gameState);
+	      var predictions = currentPlayer.predict(gameState, actions);
 
-	      var choice = predictions.sort(function (a, b) {
-	        return a.value - b.value;
-	      })[0];
+	      var choice = predictions[0];
 	      var action = choice.action;
-	      var newGameState = choice.state;
+
+	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
 
 	      if (currentPlayer.update) {
 	        currentPlayer.update(predictions, action, gameState, newGameState);
@@ -321,7 +320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/******/ 	
 	/******/ 	
 	/******/ 	var hotApplyOnUpdate = true;
-	/******/ 	var hotCurrentHash = "37b5611ef324d8e1870a"; // eslint-disable-line no-unused-vars
+	/******/ 	var hotCurrentHash = "4857bd954af4588c32ed"; // eslint-disable-line no-unused-vars
 	/******/ 	var hotCurrentModuleData = {};
 	/******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 	/******/ 	
@@ -885,16 +884,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		  return ret;
 		}
 
-		// Returns list of actions and game state that would result
-		function getActionOptions(state) {
-		  var actions = getLegalActions(state);
-		  return actions.map(function (action) {
-		    return {
-		      action: action, state: resolveAction(state, action)
-		    };
-		  });
-		}
-
 		function resolveAction(state, action) {
 
 		  var card = state.deck[0];
@@ -915,7 +904,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		exports['default'] = {
 		  getInitialState: getInitialState,
-		  getActionOptions: getActionOptions,
+		  getLegalActions: getLegalActions,
+		  resolveAction: resolveAction,
 		  __debug__: { Engine: Engine, Deck: _deck2['default'], Players: _players2['default'], Table: _table2['default'] }
 		};
 		module.exports = exports['default'];

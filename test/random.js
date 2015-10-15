@@ -1,18 +1,22 @@
 module.exports = function() {
   return {
-    predict: function(gameState, actionOptions) {
-      for(var i = 0 ; i < actionOptions.length ; i++) {
-        var option = actionOptions[i];
-        switch(option.action) {
+    predict: function(gameState, actions) {
+      const ret = [];
+      for(var i = 0 ; i < actions.length ; i++) {
+        var action = actions[i];
+        switch(action) {
           case 'take':
-            option.value = 1;
+            ret.push({action: action, value: .5});
             break;
           case 'noThanks':
-            option.value = Math.random() > .5 ? 0 : 2;
+            ret.push({action: action, value: Math.random() > .66 ? 0 : 1});
             break;
         }
       };
-      return actionOptions;
+
+      ret.sort(function(a,b) { return b.value - a.value});
+
+      return ret;
     }
   }
 }
