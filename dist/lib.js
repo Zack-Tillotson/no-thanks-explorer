@@ -96,7 +96,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    config = (0, _verify.verifyConfig)(config);
 
 	    players.forEach(function (player, index) {
-	      return player.id = player.id || 'Player ' + (index + 1);
+	      player.id = player.id || 'Player ' + (index + 1);
+	      player.stats = { take: 0, noThanks: 0 };
 	    });
 
 	    var gameState = _noThanksEngine2['default'].getInitialState(players);
@@ -108,6 +109,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var choice = predictions[0];
 	      var action = choice.action;
+
+	      currentPlayer.stats[action]++;
 
 	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
 
@@ -153,6 +156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var highscore = gameState.players.list.reduce(function (best, player) {
 	    return player.score < best ? player.score : best;
 	  }, 9999);
+
 	  gameState.players.list.forEach(function (player, index) {
 
 	    var winnerMarker = '   ';
@@ -161,7 +165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    var currentPlayerMarker = gameState.players.currentPlayer === index ? '*' : ' ';
-	    console.log(winnerMarker + ' ' + currentPlayerMarker + ' ' + JSON.stringify(player));
+	    console.log(winnerMarker + ' ' + currentPlayerMarker + ' ' + player.id + ' ' + ': ' + ' ' + 'Score ' + player.score + ' ' + '$' + player.money + ' ' + JSON.stringify(player.cards) + ' ' + JSON.stringify(player.stats));
 	  });
 	}
 

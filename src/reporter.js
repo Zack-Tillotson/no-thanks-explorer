@@ -8,6 +8,7 @@ function printGameState(gameState, showWinner = false) {
   const highscore = gameState.players.list.reduce((best, player) => 
         player.score < best ? player.score : best
       , 9999);
+
   gameState.players.list.forEach((player, index) => {
 
     let winnerMarker = '   ';
@@ -16,7 +17,16 @@ function printGameState(gameState, showWinner = false) {
     }
 
     const currentPlayerMarker = gameState.players.currentPlayer === index ? '*' : ' ';
-    console.log(winnerMarker + ' ' + currentPlayerMarker + ' ' + JSON.stringify(player));
+    console.log(
+      winnerMarker + 
+      ' ' + currentPlayerMarker + 
+      ' ' + player.id + 
+      ' ' + ':' +
+      ' ' + 'Score ' + player.score + 
+      ' ' + '$' + player.money +
+      ' ' + JSON.stringify(player.cards) +
+      ' ' + JSON.stringify(player.stats)
+    );
   });
   
 }

@@ -8,7 +8,10 @@ export default {
     players = verifyPlayers(players);
     config = verifyConfig(config);
 
-    players.forEach((player, index) => player.id = player.id || 'Player ' + (index + 1));
+    players.forEach((player, index) => {
+      player.id = player.id || 'Player ' + (index + 1);
+      player.stats = {take: 0, noThanks: 0};
+    });
 
     let gameState = Engine.getInitialState(players);
     while(gameState.game.ongoing) {
@@ -19,6 +22,8 @@ export default {
       
       const choice = predictions[0];
       const action = choice.action;
+
+      currentPlayer.stats[action]++;
       
       const newGameState = Engine.resolveAction(gameState, action);
 
