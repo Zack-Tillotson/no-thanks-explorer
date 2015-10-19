@@ -97,7 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    players.forEach(function (player, index) {
 	      player.id = player.id || 'Player ' + (index + 1);
-	      player.stats = { take: 0, noThanks: 0 };
+	      player.stats = { take: 0, noThanks: 0, forcedTake: 0 };
 	    });
 
 	    var gameState = _noThanksEngine2['default'].getInitialState(players);
@@ -111,6 +111,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var action = choice.action;
 
 	      currentPlayer.stats[action]++;
+	      if (action === 'take' && actions.length === 1) {
+	        currentPlayer.stats['forcedTake']++;
+	      }
 
 	      var newGameState = _noThanksEngine2['default'].resolveAction(gameState, action);
 
@@ -165,7 +168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    var currentPlayerMarker = gameState.players.currentPlayer === index ? '*' : ' ';
-	    console.log(winnerMarker + ' ' + currentPlayerMarker + ' ' + player.id + ' ' + ': ' + ' ' + 'Score ' + player.score + ' ' + '$' + player.money + ' ' + JSON.stringify(player.cards) + ' ' + JSON.stringify(player.stats));
+	    console.log(winnerMarker + ' ' + currentPlayerMarker + ' ' + player.id + ' ' + ':' + ' ' + 'Score ' + player.score + ' ' + '$' + player.money + ' ' + JSON.stringify(player.cards) + ' ' + JSON.stringify(player.stats));
 	  });
 	}
 

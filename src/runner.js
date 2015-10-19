@@ -10,7 +10,7 @@ export default {
 
     players.forEach((player, index) => {
       player.id = player.id || 'Player ' + (index + 1);
-      player.stats = {take: 0, noThanks: 0};
+      player.stats = {take: 0, noThanks: 0, forcedTake: 0};
     });
 
     let gameState = Engine.getInitialState(players);
@@ -24,6 +24,9 @@ export default {
       const action = choice.action;
 
       currentPlayer.stats[action]++;
+      if(action === 'take' && actions.length === 1) {
+        currentPlayer.stats['forcedTake']++;
+      }
       
       const newGameState = Engine.resolveAction(gameState, action);
 
